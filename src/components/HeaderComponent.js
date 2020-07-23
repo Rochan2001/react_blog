@@ -14,11 +14,17 @@ class Header extends Component {
     this.toggleNav = this.toggleNav.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.handleGoogleLogin = this.handleGoogleLogin.bind(this);
+    this.handleGithubLogin = this.handleGithubLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
 
   handleLogout() {
     this.props.logoutUser();
+  }
+
+  handleGithubLogin(){
+    this.toggleModal();
+    this.props.githubLogin();
   }
 
   handleGoogleLogin(){
@@ -107,7 +113,10 @@ class Header extends Component {
           </ModalHeader>
           <ModalBody>
             <Button color="danger" onClick={this.handleGoogleLogin}>
-              <span className="fa fa-google fa-lg"></span> Login with Google
+              <span className="fa fa-google fa-lg"></span> Google
+            </Button>
+            <Button color="dark" onClick={this.handleGithubLogin}>
+              <span className="fa fa-github fa-lg"></span> Github
             </Button>
           </ModalBody>
         </Modal>

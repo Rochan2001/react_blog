@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from './HeaderComponent';
-import { googleLogin, logoutUser } from "../redux/ActionCreators";
+import { googleLogin, logoutUser, githubLogin } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => ({
@@ -10,12 +10,14 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) => ({
   googleLogin: () => dispatch(googleLogin()),
   logoutUser: () => dispatch(logoutUser()),
+  githubLogin: () => dispatch(githubLogin()),
 });
 class Main extends Component{
     render(){
         return (
           <Header auth={this.props.auth}
                   googleLogin={this.props.googleLogin}
+                  githubLogin={this.props.githubLogin}
                   logoutUser={this.props.logoutUser} />
         );
     }

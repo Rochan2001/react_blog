@@ -33,6 +33,28 @@ export const googleLogin = () => (dispatch) => {
     });
 };
 
+export const githubLogin = () => (dispatch) => {
+  const provider =  new firebase.auth.GithubAuthProvider();
+  provider.addScope("repo");
+
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then(function (result) {
+      // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+      // var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      dispatch(receiveLogin(user));
+      // ...
+    })
+    .catch(function (error) {
+       dispatch(loginError(error.message));
+    });
+
+
+}
+
 export const requestLogout = () => {
   return {
     type: ActionTypes.LOGOUT_REQUEST,
