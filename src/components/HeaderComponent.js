@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron,
-    Button, Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Input, Label } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem,
+         Button, Modal, ModalHeader, ModalBody,Col, Row } from 'reactstrap';
 import { a } from "react-router-dom";
 
 class Header extends Component {
@@ -39,7 +38,7 @@ class Header extends Component {
   }
 
   toggleNav() {
-    this.setState({ isNavOpen: !this.state.isNav });
+    this.setState({ isNavOpen: !this.state.isNavOpen });
   }
 
   render() {
@@ -112,12 +111,16 @@ class Header extends Component {
             </h3>
           </ModalHeader>
           <ModalBody>
+            <Row>
+              <Col md={6}>
             <Button color="danger" onClick={this.handleGoogleLogin}>
               <span className="fa fa-google fa-lg"></span> Google
             </Button>
-            <Button color="dark" onClick={this.handleGithubLogin}>
+              </Col>
+            <Button className="ml-5" color="dark" onClick={this.handleGithubLogin}>
               <span className="fa fa-github fa-lg"></span> Github
             </Button>
+            </Row>
           </ModalBody>
         </Modal>
       </div>

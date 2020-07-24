@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Header from './HeaderComponent';
+import Footer from "./FooterComponent";
 import { googleLogin, logoutUser, githubLogin } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
+
 
 const mapStateToProps = state => ({
     auth : state.auth
@@ -15,10 +17,15 @@ const mapDispatchToProps = (dispatch) => ({
 class Main extends Component{
     render(){
         return (
-          <Header auth={this.props.auth}
-                  googleLogin={this.props.googleLogin}
-                  githubLogin={this.props.githubLogin}
-                  logoutUser={this.props.logoutUser} />
+          <div>
+            <Header
+              auth={this.props.auth}
+              googleLogin={this.props.googleLogin}
+              githubLogin={this.props.githubLogin}
+              logoutUser={this.props.logoutUser}
+            />
+            <Footer />
+          </div>
         );
     }
 }
