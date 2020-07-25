@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem,
          Button, Modal, ModalHeader, ModalBody,Col, Row } from 'reactstrap';
-import { a } from "react-router-dom";
+
+
 
 class Header extends Component {
   constructor(props) {
@@ -16,6 +17,9 @@ class Header extends Component {
     this.handleGithubLogin = this.handleGithubLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
+
+  
+
 
   handleLogout() {
     this.props.logoutUser();
@@ -113,13 +117,17 @@ class Header extends Component {
           <ModalBody>
             <Row>
               <Col md={6}>
-            <Button color="danger" onClick={this.handleGoogleLogin}>
-              <span className="fa fa-google fa-lg"></span> Google
-            </Button>
+                <Button color="danger" onClick={this.handleGoogleLogin}>
+                  <span className="fa fa-google fa-lg"></span> Google
+                </Button>
               </Col>
-            <Button className="ml-5" color="dark" onClick={this.handleGithubLogin}>
-              <span className="fa fa-github fa-lg"></span> Github
-            </Button>
+              <Button
+                className="ml-5"
+                color="dark"
+                onClick={this.handleGithubLogin}
+              >
+                <span className="fa fa-github fa-lg"></span> Github
+              </Button>
             </Row>
           </ModalBody>
         </Modal>
@@ -127,5 +135,7 @@ class Header extends Component {
     );
   }
 }
+
+
 
 export default Header;

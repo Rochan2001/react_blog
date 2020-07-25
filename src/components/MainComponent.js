@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import Header from './HeaderComponent';
 import Footer from "./FooterComponent";
+import Home from './HomeComponent';
 import { googleLogin, logoutUser, githubLogin } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
+import { Switch, Route, Redirect} from "react-router-dom";
+
 
 
 const mapStateToProps = state => ({
@@ -15,7 +18,14 @@ const mapDispatchToProps = (dispatch) => ({
   githubLogin: () => dispatch(githubLogin()),
 });
 class Main extends Component{
+
     render(){
+
+        const HomePage = () => {
+          return (
+            <Home/>
+          );
+        };
         return (
           <div>
             <Header
@@ -24,6 +34,10 @@ class Main extends Component{
               githubLogin={this.props.githubLogin}
               logoutUser={this.props.logoutUser}
             />
+            <Switch>
+              <Route path="/home" component={HomePage} />
+              <Redirect to="/home" />
+            </Switch>
             <Footer />
           </div>
         );
