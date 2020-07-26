@@ -1,6 +1,40 @@
 import * as ActionTypes from "./ActionTypes";
 import { auth, firestore } from "../firebase/firebase";
 import firebase from 'firebase';
+
+export const articlesLoading = () => ({
+  type: ActionTypes.ARTICLES_LOADING,
+});
+
+export const addArticles = (articles) =>({
+  type: ActionTypes.ADD_ARTICLES,
+  payload: articles,
+})
+
+export const articlesFailed = (errmess) =>({
+  type: ActionTypes.ARTICLES_FAILED,
+  payload: errmess,
+})
+
+export const fetchArticles = () => (dispatch) => {
+  dispatch(articlesLoading(true));
+
+   firestore
+    .collection("articles")
+    .get()
+    .then((snapshot) => {
+      let articles = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const _id = doc.id;
+        articles.push({ _id, ...data });
+      });
+      return articles;
+    })
+    .then((dishes) => dispatch(addArticles(dishes)))
+    .catch((error) => dispatch(articlesFailed(error.message)));
+};
+
 export const receiveLogin = (user) => {
   return {
     type: ActionTypes.LOGIN_SUCCESS,
@@ -14,6 +48,7 @@ export const loginError = (message) => {
     message: message,
   };
 };
+
 
 
 

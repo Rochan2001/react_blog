@@ -2,28 +2,36 @@ import React, { Component } from 'react';
 import Header from './HeaderComponent';
 import Footer from "./FooterComponent";
 import Home from './HomeComponent';
-import { googleLogin, logoutUser, githubLogin } from "../redux/ActionCreators";
+import { googleLogin, logoutUser, githubLogin, fetchArticles } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect} from "react-router-dom";
 
 
 
 const mapStateToProps = state => ({
-    auth : state.auth
+    auth : state.auth,
+    articles: state.articles,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   googleLogin: () => dispatch(googleLogin()),
   logoutUser: () => dispatch(logoutUser()),
   githubLogin: () => dispatch(githubLogin()),
+  fetchArticles: () => dispatch(fetchArticles()),
 });
 class Main extends Component{
+
+  componentDidMount(){
+    this.props.fetchArticles();
+  }
 
     render(){
 
         const HomePage = () => {
           return (
-            <Home/>
+            <Home isLoading={this.props.articles.isLoading}
+                  errMess={this.props.articles.errMess}
+                  articles={this.props.articles} />
           );
         };
         return (
