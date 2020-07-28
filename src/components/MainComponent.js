@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Header from './HeaderComponent';
-import Footer from "./FooterComponent";
+import Footer from './FooterComponent';
+import ArticleDetail from './ArticledetailComponent';
 import Home from './HomeComponent';
 import { googleLogin, logoutUser, githubLogin, fetchArticles } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect} from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
 
 
@@ -27,6 +28,15 @@ class Main extends Component{
 
     render(){
 
+        const ArticleWithId = ({match}) => {
+          return(
+
+            
+            <ArticleDetail article={this.props.articles.articles.filter((article) => article._id === match.params.articleId)[0]} />
+
+          );
+        }
+
         const HomePage = () => {
           return (
             <Home isLoading={this.props.articles.isLoading}
@@ -43,7 +53,8 @@ class Main extends Component{
               logoutUser={this.props.logoutUser}
             />
             <Switch>
-              <Route path="/home" component={HomePage} />
+              <Route exact path="/home" component={HomePage} />
+              <Route path="/home/:articleId" component={ArticleWithId} />
               <Redirect to="/home" />
             </Switch>
             <Footer />
@@ -52,4 +63,4 @@ class Main extends Component{
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
