@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem,
          Button, Modal, ModalHeader, ModalBody,Col, Row } from 'reactstrap';
 
-
+import { auth } from "../firebase/firebase";
 
 class Header extends Component {
   constructor(props) {
@@ -83,7 +83,7 @@ class Header extends Component {
             </Nav>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                {!this.props.auth.isAuthenticated ? (
+                {!auth.currentUser ? (
                   <Button outline onClick={this.toggleModal}>
                     <span className="fa fa-sign-in fa-lg"></span> Login
                     {this.props.auth.isLoading ? (
@@ -93,8 +93,7 @@ class Header extends Component {
                 ) : (
                   <div>
                     <div className="navbar-text mr-3">
-                      {console.log(this.props.auth.user)}
-                      {this.props.auth.user.displayName}
+                      {auth.currentUser.displayName}
                     </div>
                     <Button outline onClick={this.handleLogout}>
                       <span className="fa fa-sign-out fa-lg"></span> Logout
