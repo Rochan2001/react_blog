@@ -193,3 +193,19 @@ export const addComments = (comments) => ({
   type: ActionTypes.ADD_COMMENTS,
   payload: comments
 });
+
+export const commentDelete = (commentId) => ({
+  type: ActionTypes.DELETE_COMMENT,
+  payload: commentId
+});
+
+export const deleteComment = (docId) => (dispatch) => {
+
+  firestore.collection('comments').doc(docId).delete()
+  .then(() =>{
+    dispatch(commentDelete(docId));
+    console.log('comment deleted');
+  })
+  .catch(error => dispatch(commentsFailed(error.message)))
+
+}

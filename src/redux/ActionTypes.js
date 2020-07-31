@@ -10,3 +10,4 @@ export const ADD_ARTICLES = "ADD_ARTICLES";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const COMMENTS_FAILED = "COMMENTS_FAILED";
 export const ADD_COMMENTS = "ADD_COMMENTS";
+export const DELETE_COMMENT = "DELETE_COMMENT";

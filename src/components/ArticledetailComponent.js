@@ -138,16 +138,17 @@ class ArticleDetail extends Component {
             </Box>
           </Box>
         </form>
-        <RenderComments comments={this.props.comments} />
+        {this.props.comments.length} {this.props.comments.length <= 1 ?"comment":"comments"}
+        <RenderComments deleteComment={this.props.deleteComment} comments={this.props.comments} />
       </div>
     );}
 }
 
-function RenderComments({comments}){
+function RenderComments({comments, deleteComment}){
 
   return (
     <div className="media content-section">
-      <RenderComment comments={comments} />
+      <RenderComment deleteComment={deleteComment} comments={comments} />
     </div>
   );
 }
@@ -156,7 +157,12 @@ function RenderComments({comments}){
 
 
 
-function RenderComment({ comments }) {
+function RenderComment({ comments, deleteComment }) {
+
+  const handleDeleteComment = (docId) => {
+    deleteComment(docId);
+  }
+  
   const COMMENTS = comments.map((comment) => {
     return auth.currentUser ? (
       auth.currentUser.uid === comment.author._id ? (
@@ -177,7 +183,7 @@ function RenderComment({ comments }) {
             <div className="row">
               <div className="col-8">{comment.comment}</div>
               <div className="col-4">
-                <Button>
+                <Button onClick={() => {handleDeleteComment(comment._id)}}>
                   <DeleteIcon />
                 </Button>
               </div>

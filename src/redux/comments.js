@@ -29,6 +29,11 @@ export const Comments = (
       var comment = action.payload;
       return { ...state, comments: state.comments.concat(comment) };
 
+    case ActionTypes.DELETE_COMMENT:
+      var docId = action.payload;
+      var newComments = state.comments.filter((comment) => comment._id !== docId);
+      return { ...state, comments: newComments };
+
     default:
       return state;
   }

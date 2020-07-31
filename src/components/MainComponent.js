@@ -3,7 +3,14 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import ArticleDetail from './ArticledetailComponent';
 import Home from './HomeComponent';
-import { googleLogin, logoutUser, githubLogin, fetchArticles, postComment, fetchComments } from "../redux/ActionCreators";
+import { 
+       googleLogin, 
+       logoutUser, 
+       githubLogin, 
+       fetchArticles, 
+       postComment, 
+       fetchComments,
+       deleteComment } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
@@ -21,6 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchArticles: () => dispatch(fetchArticles()),
   postComment: (comment,article) => dispatch(postComment(comment,article)),
   fetchComments: () => dispatch(fetchComments()),
+  deleteComment: (docId) => dispatch(deleteComment(docId)),
 });
 class Main extends Component{
 
@@ -41,7 +49,8 @@ class Main extends Component{
                            isLoading={this.props.articles.isLoading}
                            errMess={this.props.articles.errMess}
                            postComment={this.props.postComment}
-                           comments={this.props.comments.comments.filter((comment) => comment.article === match.params.articleId)} />
+                           comments={this.props.comments.comments.filter((comment) => comment.article === match.params.articleId)} 
+                           deleteComment={this.props.deleteComment} />
 
           );
         }
