@@ -1,5 +1,5 @@
 import React, { Component }from 'react';
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -7,19 +7,10 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { auth } from "../firebase/firebase";
 
 
-const useStylesFunc = makeStyles((theme) => ({
-  comment: {
-    width: "100%",
-    maxWidth: "36ch",
-    backgroundColor: theme.palette.background.paper,
-  },
-  inline: {
-    display: "inline",
-  },
-}));
 
 const useStyles = (theme) => ({
   author: {
@@ -120,6 +111,7 @@ class ArticleDetail extends Component {
             </div>
           </div>
         </div>
+        
         <form onSubmit={this.handleSubmit} className={classes.form}>
           <Box container>
             <Box item xs={12}>
@@ -133,7 +125,7 @@ class ArticleDetail extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Avatar src={auth.currentUser.photoURL} />
+                      <Avatar  src={auth.currentUser?auth.currentUser.photoURL:null} />
                     </InputAdornment>
                   ),
                 }}
@@ -166,19 +158,71 @@ function RenderComments({comments}){
 
 function RenderComment({ comments }) {
   const COMMENTS = comments.map((comment) => {
-    return (
+    return auth.currentUser ? (
+      auth.currentUser.uid === comment.author._id ? (
+        <li class="media mt-2 mb-2">
+          <img
+            class="mr-3 rounded-circle article-img"
+            alt={comment.author.firstname}
+            src={comment.author.image}
+          ></img>
+          <div className="container">
+            <div className="media-body row">
+              <div className="col-12">
+                <strong>
+                  <h7 class="mt-0">{comment.author.firstname}</h7>
+                </strong>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-8">{comment.comment}</div>
+              <div className="col-4">
+                <Button>
+                  <DeleteIcon />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </li>
+      ) : (
+        <li class="media mt-2 mb-2">
+          <img
+            class="mr-3 rounded-circle article-img"
+            alt={comment.author.firstname}
+            src={comment.author.image}
+          ></img>
+          <div className="container">
+            <div className="media-body row">
+              <div className="col-12">
+                <strong>
+                  <h7 class="mt-0">{comment.author.firstname}</h7>
+                </strong>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">{comment.comment}</div>
+            </div>
+          </div>
+        </li>
+      )
+    ) : (
       <li class="media mt-2 mb-2">
         <img
           class="mr-3 rounded-circle article-img"
           alt={comment.author.firstname}
           src={comment.author.image}
         ></img>
-
-        <div class="media-body">
-          <strong>
-            <h7 class="mt-0">{comment.author.firstname}</h7>
-          </strong>
-          <div>{comment.comment}</div>
+        <div className="container">
+          <div className="media-body row">
+            <div className="col-12">
+              <strong>
+                <h7 class="mt-0">{comment.author.firstname}</h7>
+              </strong>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">{comment.comment}</div>
+          </div>
         </div>
       </li>
     );
