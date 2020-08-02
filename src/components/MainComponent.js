@@ -3,6 +3,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import ArticleDetail from './ArticledetailComponent';
 import Home from './HomeComponent';
+import Favorites from './FavoriteComponent';
 import { 
        googleLogin, 
        logoutUser, 
@@ -83,6 +84,13 @@ class Main extends Component{
             />
           );
         };
+
+      const PrivateRoute = ({ component: Component, ...rest }) => (
+        <Route {...rest} render={(props) => (
+         <Component {...props} />
+        )} />
+      );
+
         return (
           <div>
             <Header
@@ -94,6 +102,7 @@ class Main extends Component{
             <Switch>
               <Route exact path="/home" component={HomePage} />
               <Route path="/home/:articleId" component={ArticleWithId} />
+              <PrivateRoute exact path="/favorites" component={() => <Favorites favorites={this.props.favorites} articles={this.props.articles}  />} />
               <Redirect to="/home" />
             </Switch>
             <Footer />
