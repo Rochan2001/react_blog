@@ -209,3 +209,103 @@ export const deleteComment = (docId) => (dispatch) => {
   .catch(error => dispatch(commentsFailed(error.message)))
 
 }
+
+export const postFavorite = (articleId) => (dispatch) => {
+  if (!auth.currentUser) {
+    console.log("No user logged in!");
+    return;
+  }
+
+  return firestore
+    .collection("favorites")
+    .add({
+      user: auth.currentUser.uid,
+      article: articleId,
+    })
+    .then((docRef) => {
+      firestore
+        .collection("favorites")
+        .doc(docRef.id)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            dispatch(fetchFavorites());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        });
+    })
+    .catch((error) => dispatch(favoritesFailed(error.message)));
+};
+
+export const deleteFavorite = (articleId) => (dispatch) => {
+  if (!auth.currentUser) {
+    console.log("No user logged in!");
+    return;
+  }
+
+  var user = auth.currentUser;
+
+  return firestore
+    .collection("favorites")
+    .where("user", "==", user.uid)
+    .where("article", "==", articleId)
+    .get()
+    .then((snapshot) => {
+      console.log(snapshot);
+      snapshot.forEach((doc) => {
+        console.log(doc.id);
+        firestore
+          .collection("favorites")
+          .doc(doc.id)
+          .delete()
+          .then(() => {
+            dispatch(fetchFavorites());
+          });
+      });
+    })
+    .catch((error) => dispatch(favoritesFailed(error.message)));
+};
+
+export const fetchFavorites = () => (dispatch) => {
+  if (!auth.currentUser) {
+    console.log("No user logged in!");
+    return;
+  }
+
+  var user = auth.currentUser;
+
+  dispatch(favoritesLoading(true));
+
+  return firestore
+    .collection("favorites")
+    .where("user", "==", user.uid)
+    .get()
+    .then((snapshot) => {
+      let favorites = { user: user, articles: [] };
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        favorites.articles.push(data.article);
+      });
+      console.log(favorites);
+      return favorites;
+    })
+    .then((favorites) => dispatch(addFavorites(favorites)))
+    .catch((error) => dispatch(favoritesFailed(error.message)));
+};
+
+export const favoritesLoading = () => ({
+  type: ActionTypes.FAVORITES_LOADING,
+});
+
+export const favoritesFailed = (errmess) => ({
+  type: ActionTypes.FAVORITES_FAILED,
+  payload: errmess,
+});
+
+export const addFavorites = (favorites) => ({
+  type: ActionTypes.ADD_FAVORITES,
+  payload: favorites,
+});
+

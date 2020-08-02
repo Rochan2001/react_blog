@@ -4,6 +4,7 @@ import logger from 'redux-logger';
 import {Auth} from './auth';
 import {Articles} from './articles';
 import {Comments} from './comments';
+import {favorites} from './favorites';
 
 export const ConfigureStore = () => {
     
@@ -12,6 +13,7 @@ export const ConfigureStore = () => {
         auth:Auth,
         articles:Articles,
         comments:Comments,
+        favorites: favorites,
       }),
 
       applyMiddleware(thunk, logger)

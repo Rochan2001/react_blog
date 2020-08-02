@@ -9,11 +9,14 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import Pagination from "@material-ui/lab/Pagination";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
+import { auth } from "../firebase/firebase";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,18 +53,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RenderArticles ({article,classes}){
+function RenderArticles ({article,classes,postFavorite,favoriteArticles,deleteFavorite}){
+
+
+  const toggleFavorite = () => {
+
+    if (favorite(article._id)){
+         deleteFavorite(article._id);
+    }
+    else{
+         postFavorite(article._id);
+    }
+
+  }
+
+  const favorite = (articleId) => {
+
+
+    if (auth.currentUser && favoriteArticles)
+     var temp = favoriteArticles.some((article) => article === articleId );
+    else
+      var temp = false;
+    
+      return temp;
+  }
 
   return (
     <Card className={classes.card}>
-      
       <CardActionArea>
-        <Link to={`/home/${article._id}`} >
-        <CardMedia
-          className={classes.media}
-          image={article.image}
-          title="Contemplative Reptile"
-        />
+        <Link to={`/home/${article._id}`}>
+          <CardMedia
+            className={classes.media}
+            image={article.image}
+            title="Contemplative Reptile"
+          />
         </Link>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
@@ -89,7 +114,14 @@ function RenderArticles ({article,classes}){
           </Box>
         </Box>
         <Box>
-          <FavoriteBorderIcon />
+          <Button onClick={() => toggleFavorite()}>
+            {favorite(article._id) ?
+                <FavoriteIcon />
+                : 
+                <FavoriteBorderIcon />
+            }
+            
+          </Button>
         </Box>
       </CardActions>
     </Card>
@@ -101,13 +133,13 @@ function RenderArticles ({article,classes}){
 
 
 
-function Articles({classes,articles,isLoading,errMess}){
+function Articles({classes,articles,isLoading,errMess,postFavorite,favoriteArticles,deleteFavorite}){
 
   const articles_ = articles.map((article) => {
     return (
 
         <Grid key={article._id} item xs={12} sm={6} md={4}>
-            <RenderArticles classes={classes} article={article}/>
+            <RenderArticles  postFavorite={postFavorite} classes={classes} article={article} favoriteArticles={favoriteArticles} deleteFavorite={deleteFavorite}/>
         </Grid>
     );
   });
@@ -147,6 +179,10 @@ function Home (props) {
               articles={props.articles.articles}
               isLoading={props.articles.isLoading}
               errMessage={props.articles.errMess}
+              postFavorite={props.postFavorite}
+              favoriteArticles={props.favoriteArticles}
+              deleteFavorite={props.deleteFavorite}
+
             />
           <Box my={4} className={classes.paginationContainer}>
             <Pagination count={10} size="small" />

@@ -10,15 +10,19 @@ import {
        fetchArticles, 
        postComment, 
        fetchComments,
-       deleteComment } from "../redux/ActionCreators";
+       deleteComment, 
+       postFavorite,
+       fetchFavorites,
+       deleteFavorite, } from "../redux/ActionCreators";
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
-
+import { auth } from "../firebase/firebase";
 const mapStateToProps = state => ({
     auth : state.auth,
     articles: state.articles,
     comments: state.comments,
+    favorites: state.favorites,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -29,12 +33,16 @@ const mapDispatchToProps = (dispatch) => ({
   postComment: (comment,article) => dispatch(postComment(comment,article)),
   fetchComments: () => dispatch(fetchComments()),
   deleteComment: (docId) => dispatch(deleteComment(docId)),
+  postFavorite: (articleId) => dispatch(postFavorite(articleId)),
+  fetchFavorites: () => dispatch(fetchFavorites()),
+  deleteFavorite: (articleId) => dispatch(deleteFavorite(articleId)),
 });
 class Main extends Component{
 
   componentDidMount(){
     this.props.fetchArticles();
     this.props.fetchComments();
+    setTimeout(()=>{this.props.fetchFavorites()}, 5000);
     // if(auth.currentUser)
     // console.log(auth.user.photoURL);
   }
@@ -43,23 +51,36 @@ class Main extends Component{
 
         const ArticleWithId = ({match}) => {
           return(
-
-            
-            <ArticleDetail article={this.props.articles.articles.filter((article) => article._id === match.params.articleId)[0]}
-                           isLoading={this.props.articles.isLoading}
-                           errMess={this.props.articles.errMess}
-                           postComment={this.props.postComment}
-                           comments={this.props.comments.comments.filter((comment) => comment.article === match.params.articleId)} 
-                           deleteComment={this.props.deleteComment} />
-
+              <ArticleDetail article={this.props.articles.articles.filter((article) => article._id === match.params.articleId)[0]}
+                             isLoading={this.props.articles.isLoading}
+                             errMess={this.props.articles.errMess}
+                             postComment={this.props.postComment}
+                             comments={this.props.comments.comments.filter((comment) => comment.article === match.params.articleId)} 
+                             deleteComment={this.props.deleteComment}
+                           />
           );
         }
 
         const HomePage = () => {
-          return (
-            <Home isLoading={this.props.articles.isLoading}
-                  errMess={this.props.articles.errMess}
-                  articles={this.props.articles} />
+          return auth.currentUser &&
+            this.props.favorites.favorites ? (
+            <Home
+              isLoading={this.props.articles.isLoading}
+              errMess={this.props.articles.errMess}
+              articles={this.props.articles}
+              postFavorite={this.props.postFavorite}
+              favoriteArticles={this.props.favorites.favorites.articles}
+              deleteFavorite={this.props.deleteFavorite}
+            />
+          ) : (
+            <Home
+              isLoading={this.props.articles.isLoading}
+              errMess={this.props.articles.errMess}
+              articles={this.props.articles}
+              postFavorite={this.props.postFavorite}
+              favoriteArticles={[]}
+              deleteFavorite={this.props.deleteFavorite}
+            />
           );
         };
         return (
